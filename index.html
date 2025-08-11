@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zoom 출석 체크 자동화</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 2rem;
+        }
+        .container {
+            max-width: 800px;
+        }
+        .form-label {
+            font-weight: bold;
+        }
+        #result {
+            margin-top: 2rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="pb-3 mb-4 border-bottom">
+            <h1 class="h3">Zoom 출석 체크 자동화 (느슨한 매칭 버전)</h1>
+        </header>
+        <p>
+            Jupyter Notebook의 기능을 웹으로 구현한 버전입니다.<br>
+            - Zoom 이름에 <strong>학번 또는 이름이 포함</strong>되어 있으면 출석으로 인식합니다.<br>
+            - 출석 명단 파일의 <strong>지정한 날짜 열</strong>에 '출석' 또는 공백을 표시합니다.<br>
+            - Zoom 이름과 매칭되지 않은 인원은 별도 시트로 정리합니다.
+        </p>
+
+        <div class="mb-3">
+            <label for="attendanceFile" class="form-label">1. 출석 명단 파일 (.csv 또는 .xlsx)</label>
+            <button id="downloadSampleBtn" class="btn btn-sm btn-outline-secondary ms-2">샘플 엑셀 다운로드</button>
+            <input class="form-control mt-2" type="file" id="attendanceFile" accept=".csv, .xlsx">
+        </div>
+
+        <div class="mb-3">
+            <label for="zoomLogFile" class="form-label">2. Zoom 로그 파일 (zoom 로그.csv)</label>
+            <input class="form-control" type="file" id="zoomLogFile" accept=".csv">
+        </div>
+
+        <div class="mb-3">
+            <label for="dateColumn" class="form-label">3. 출석을 기록할 열 이름 (예: 4월21일)</label>
+            <input type="text" class="form-control" id="dateColumn" placeholder="4월21일">
+        </div>
+
+        <button id="processBtn" class="btn btn-primary w-100 py-2">출석 처리 및 엑셀 생성</button>
+
+        <div id="result" class="mt-4"></div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.2/papaparse.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
