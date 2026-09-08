@@ -27,8 +27,13 @@
         </header>
         <p>
             - Zoom 이름에 <strong>학번 또는 이름이 포함</strong>되어 있으면 출석으로 인식합니다.<br>
-            - 매칭된 학생의 총 체류 시간이 <strong>90분 이상</strong>일 경우 '출석' 처리됩니다.<br>
-            - 출석 명단 파일의 <strong>지정한 날짜 열</strong>에 '출석' 또는 공백을 표시합니다.<br>
+            - 공백·괄호·언더바·발음기호는 무시하며(<code>2625409018차미정</code> = <code>2625409018 차미정</code>),
+              한글 이름의 <strong>성이 뒤로 간 경우</strong>(<code>이정희</code> ↔ <code>정희 이</code>)와
+              <strong>영문 이름 어순 뒤바뀜</strong>(<code>Hueppe Kathrin</code> ↔ <code>Kathrin Hueppe</code>)도 인식합니다.<br>
+            - <strong>학번이 비어 있어도</strong> 이름만으로 매칭하며, 명단에서 제외하지 않습니다.<br>
+            - 매칭된 학생의 총 체류 시간이 <strong>기준 시간 이상</strong>일 경우 '출석' 처리됩니다.<br>
+            - 출석 명단 파일의 <strong>기존 열을 모두 보존</strong>한 뒤, 지정한 날짜 열과
+              <strong>총 체류(분) · 매칭된 Zoom 이름</strong> 열을 덧붙입니다.<br>
             - Zoom 이름과 매칭되지 않은 인원은 별도 시트로 정리합니다.
         </p>
 
@@ -46,6 +51,12 @@
         <div class="mb-3">
             <label for="dateColumn" class="form-label">3. 출석을 기록할 열 이름 (예: 4월21일)</label>
             <input type="text" class="form-control" id="dateColumn" placeholder="4월21일">
+        </div>
+
+        <div class="mb-3">
+            <label for="minMinutes" class="form-label">4. 출석 인정 최소 체류 시간 (분)</label>
+            <input type="number" class="form-control" id="minMinutes" value="90" min="0" step="1">
+            <div class="form-text">기본 90분. 수업이 짧거나 늦게 시작한 회차는 낮춰서 쓰세요.</div>
         </div>
 
         <button id="processBtn" class="btn btn-primary w-100 py-2">출석 처리 및 엑셀 생성</button>
