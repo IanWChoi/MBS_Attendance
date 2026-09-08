@@ -147,6 +147,22 @@ document.getElementById('downloadSampleBtn').addEventListener('click', () => {
 });
 
 /* =========================================================================
+ * 파일명 유틸 - 날짜 열 이름을 파일명에 안전하게 넣기
+ * ========================================================================= */
+function sanitizeFileName(s) {
+    return String(s == null ? '' : s)
+        .replace(/[\\/:*?"<>|]/g, '')   // 파일명에 쓸 수 없는 문자 제거
+        .replace(/\s+/g, '')
+        .trim();
+}
+
+function todayStamp() {
+    const d = new Date();
+    const pad = n => String(n).padStart(2, '0');
+    return `${d.getFullYear()}${pad(d.getMonth() + 1)}${pad(d.getDate())}`;
+}
+
+/* =========================================================================
  * 출석 처리
  * ========================================================================= */
 document.getElementById('processBtn').addEventListener('click', () => {
@@ -295,11 +311,12 @@ document.getElementById('processBtn').addEventListener('click', () => {
         const wb = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(finalAttendance, { header: outHeaders }), "출석 체크");
         XLSX.utils.book_append_sheet(wb, XLSX.utils.json_to_sheet(unmatchedSummary), "확인 필요");
-        XLSX.writeFile(wb, "출석결과_느슨한매칭_자동.xlsx");
+        const fileName = `출석결과_${sanitizeFileName(dateColumn) || todayStamp()}.xlsx`;
+        XLSX.writeFile(wb, fileName);
 
         const presentCount = finalAttendance.filter(r => r[dateColumn] === '출석').length;
         resultDiv.innerHTML =
-            `<div class="alert alert-success mb-2">✅ 엑셀 저장 완료: 출석결과_느슨한매칭_자동.xlsx</div>` +
+            `<div class="alert alert-success mb-2">✅ 엑셀 저장 완료: ${fileName}</div>` +
             `<ul class="small text-muted mb-0">` +
             `<li>명단 <strong>${students.length}명</strong> 중 <strong>${presentCount}명</strong> 출석 (${minMinutes}분 이상)</li>` +
             `<li>매칭되지 않은 Zoom 참가자 <strong>${unmatchedSummary.length}명</strong> → '확인 필요' 시트</li>` +
